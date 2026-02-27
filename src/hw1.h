@@ -1,19 +1,30 @@
+#ifndef HW1_H
+#define HW1_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
 
-typedef struct Queen{
-        int size;       //sizes of the vectors
-        int* xvector;   //the squares the queen sees horizontaly
-        int* yvector;   //the squares the queen sees verticaly
-        int* zvector;   //the squares the queen sees diagonaly 
-}Queen_t;
+#define MAX_N 15
 
-typedef struct Board{
-        int nqueens;    //the number of queens on the board
+typedef struct{
         int size;       //n size of the board
-        int** board;    //the 2d array that will hold the values of the board (0 for empty, 1 if there is a queen on that coordinate)
+        int board[MAX_N];    //array holding the chessboard (indeex = rows, value = columns)
+
+        int col_attack[MAX_N];      //it tracks the columns if a queen is attacking another (0=safe, 1=udner attack)
+        int left_diagonal_attack[2*MAX_N-1];        //it tracks the left to right diagonal if a queen attack another
+        int right_diagonal_attack[2*MAX_N-1];       //it tracks the right to left diagonal if a queen attack another
 }Board_t;
 
-int board_init(Board_t **chessboard, int n);
-int queen_init(Queen_t **queen, int n);
+typedef struct{
+        Board_t chessboard;
+        int start_column;
+}thread_args;
+
+extern long long  solutions;
+extern pthread_mutex_t sol_mutex;
+
+int board_init(Board_t *chessboard, int n);
+void *solve(void* args);
+
+#endif

@@ -2,7 +2,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -pthread -O2
 TARGET = src/hw1
-SRC = src/main.c
+SRC = src/main.c src/functions.c
 
 # Default rule
 all: $(TARGET)
@@ -16,5 +16,9 @@ clean:
 	rm -f $(TARGET)
 
 # Run the program
-run: 
-	./$(TARGET)
+run: $(TARGET)
+	./$(TARGET) $(filter-out $@,$(MAKECMDGOALS))
+
+# This dummy rule prevents Make from complaining that '10' is not a target
+%:
+	@:
